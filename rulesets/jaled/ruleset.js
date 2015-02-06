@@ -54,7 +54,8 @@ var JaledRuleset = civ.ruleset.extend({
   game: function (players, done) {
     var self = this;
 
-    async.timesSeries(100, function (i, done) {
+    async.timesSeries(20, function (i, done) {
+      self.current_turn = i;
       var tasks = self._players.map(function (player, j) {
         // dead players make no choices
         if (self.world.societies[j].dead)
@@ -71,15 +72,12 @@ var JaledRuleset = civ.ruleset.extend({
           self.after_turn
         ], choices, self.world, done);
       });
-    }, function (err) {
-      if (err) return done(err);
-      done(null, self.history);
-    });
+    }, done);
   },
   // runs after the game
   after_game: function (players, done) {
     // TODO...?
-    done();
+    done(null, this.history);
   },
   // executes before each turn
   before_turn: function (choices, world, done) {
@@ -134,16 +132,20 @@ var JaledRuleset = civ.ruleset.extend({
     })
     // for each dead society, add splinter societies
     .forEach(function () {
-      // pick 0-3 societies
-      var num_splinters = Math.floor(Math.random() * 4);
+      // pick 0-2 societies, bias toward 0
+      // TODO splintering causes massive processor load
+      // solution a: make societies hardier
+      // solution b: splinter less
+      // 2/6/15: reduced game length to 50 to mitigate load problem
+      var num_splinters = Math.max(Math.floor(Math.random() * 4) - 2, 0);
       var k;
       // create splinters
-      for (var j = 0; j < num_splinters; j++) {
+      if (num_splinters) for (var j = 0; j < num_splinters; j++) {
         var parents = shuffle(clone(self._players)).slice(-3);
         var new_splinter = splinter(parents);
         // add each splinter to the players and societies lists
         self._players.push(new_splinter);
-        world.societies.push(make.society(new_splinter));
+        world.societies.push(make.society(new_splinter, self.current_turn));
         world.feels.push(make.feels(1, self._players.length));
       }
     });

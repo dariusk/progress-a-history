@@ -1,7 +1,7 @@
-function make_society (player) {
+function make_society (player, age) {
   return {
-    yield: 6,
-    population: 3,
+    yield: 6 * (age || 1),
+    population: 3 * (age || 1),
     harmony: 1,
     age: 1
   };

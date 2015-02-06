@@ -63,11 +63,11 @@ Civ.prototype.play = function (opts) {
       ruleset.game,
       ruleset.after_game
     ], players, done);
-  }, function (err, reports) {
+  }, function (err) {
     if (err)
       deferred.reject(err);
     else
-      deferred.resolve(reports);
+      deferred.resolve(ruleset.history);
   });
 
   this._playing = deferred.promise;
@@ -77,7 +77,7 @@ Civ.prototype.play = function (opts) {
 
 Civ.prototype.report = function (opts) {
   this._playing.then(function (reports) {
-    console.log(JSON.stringify(reports));
+    console.log(JSON.stringify(reports, undefined, 2));
   });
 
   return this;
