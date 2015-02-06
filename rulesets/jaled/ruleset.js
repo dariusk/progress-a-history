@@ -76,8 +76,8 @@ var JaledRuleset = civ.ruleset.extend({
   },
   // runs after the game
   after_game: function (players, done) {
-    // TODO...?
-    done(null, this.history);
+    // TODO ...?
+    done();
   },
   // executes before each turn
   before_turn: function (choices, world, done) {
@@ -136,7 +136,7 @@ var JaledRuleset = civ.ruleset.extend({
       // TODO splintering causes massive processor load
       // solution a: make societies hardier
       // solution b: splinter less
-      // 2/6/15: reduced game length to 50 to mitigate load problem
+      // 2/6/15: reduced game length to 20 to mitigate load problem
       var num_splinters = Math.max(Math.floor(Math.random() * 4) - 2, 0);
       var k;
       // create splinters

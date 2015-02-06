@@ -65,7 +65,7 @@ Jaled reworks some choices in PaH to expand the game's core mechanics.
 * Develop: Increase local yield by a fraction of global yield, reducing global yield, and hurting global relations.
 * Conquer: Raise your yield, and lower another's, in proportion to respective population. Hurts relations globally.
 * Consent: Improves global relations, and improves local yield as a proportion of global relations.
-* Adapt: Decreases how much yield your people consume each turn.
+* Adapt: Decreases how much yield your people consume each turn, and increases global yield in proportion to the society's age.
 
 ## Divergence
 

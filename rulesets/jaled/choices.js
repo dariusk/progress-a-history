@@ -100,7 +100,9 @@ module.exports = {
     done(null, world);
   },
   adapt: function (i, world, done) {
+    var society = world.societies[i];
     world.societies[i].harmony++;
+    world.yield += society.age;
     done(null, world);
   }
 };

@@ -4,7 +4,6 @@
   "description": "Guide an engineered people as they settle another world.",
   "main": "index.js",
   "dependencies": {
-    "ajve-civ": "^0.1.3",
     "async": "^0.9.0",
     "clone": "^0.2.0",
     "commander": "^2.6.0",
