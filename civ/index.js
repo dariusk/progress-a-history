@@ -20,7 +20,10 @@ function RuleSet (opts) {
 function Player (opts) {
   var self = this;
   Object.keys(opts).forEach(function (key) {
-    self[key] = opts[key].bind(self);
+    if (typeof opts[key] === 'function')
+      self[key] = opts[key].bind(self);
+    else
+      self[key] = opts[key];
   });
 
   if (this.init) this.init();
