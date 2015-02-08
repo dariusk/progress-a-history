@@ -1,7 +1,7 @@
-function make_society (player, age) {
+function make_society (player) {
   return {
-    yield: 6 * (age || 1),
-    population: 3 * (age || 1),
+    yield: 6,
+    population: 3,
     harmony: 1,
     age: 1
   };
@@ -23,7 +23,7 @@ function make_world (players) {
   var world = {
     yield: 20,
     feels: make_feels(players.length),
-    societies: players.map(make_society)
+    societies: players.map(function (player) { return make_society(player); })
   };
 
   return world;

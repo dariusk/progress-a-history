@@ -45,8 +45,7 @@ var JaledRuleset = civ.ruleset.extend({
   // runs before the game starts
   before_game: function (players, done) {
     this._players = players;
-    this.history = [];
-    this.world = make.world(players);
+    this.history = [make.world(players)];
 
     done();
   },
@@ -54,23 +53,33 @@ var JaledRuleset = civ.ruleset.extend({
   game: function (players, done) {
     var self = this;
 
-    async.timesSeries(20, function (i, done) {
+    async.timesSeries(50, function (i, done) {
       self.current_turn = i;
+      var world = self.history[i];
       var tasks = self._players.map(function (player, j) {
         // dead players make no choices
-        if (self.world.societies[j].dead)
-          return function (done) { done(null, null); };
+        if (world.societies[j].dead)
+          return function (done) { done(); };
         // while the living have free reign
         else
-          return player.turn.bind(player, j, self.world, Object.keys(self.choices));
+          // note: pass in cloned world so players can't possibly mess
+          // with the real deal
+          return player.turn.bind(player, j, clone(world), Object.keys(self.choices));          
       });
 
       async.parallel(tasks, function (err, choices) {
-        async.applyEachSeries([
+        var turn = [
           self.before_turn,
           self.turn,
           self.after_turn
-        ], choices, self.world, done);
+        ].map(function (func, j) {
+          if (j === 0)
+            return func.bind(self, choices, world);
+          else
+            return func.bind(self, choices);
+        });
+
+        async.waterfall(turn, done);
       });
     }, done);
   },
@@ -81,19 +90,20 @@ var JaledRuleset = civ.ruleset.extend({
   },
   // executes before each turn
   before_turn: function (choices, world, done) {
-    this.history.push(clone(world));
-    done();
+    done(null, world);
   },
   // executes each turn
   turn: function (choices, world, done) {
     var self = this;
     var tasks = choices.map(function (choice, i) {
-      if (choice !== null)
+      if (choice)
         return self.choices[choice].bind(self, i);
       else
         // players may pass `null`
         // dead players always pass `null`
-        return function (world, done) { done(null, world); };
+        return function (world, done) {
+          done(null, world); 
+        };
     });
 
     tasks[0] = tasks[0].bind(self, world);
@@ -104,27 +114,31 @@ var JaledRuleset = civ.ruleset.extend({
   after_turn: function (choices, world, done) {
     var self = this;
 
+    // societies age
+    world.societies.forEach(function (society, i) {
+      if (!society.dead)
+        world.societies[i].age++;
+    });
+
     // societies eat; some die
     world.societies.forEach(function (society, i) {
-      var hunger;
-      if (society.harmony > 0)
-        hunger = society.population / society.harmony;
-      if (society.harmony < 0)
-        hunger = society.population + Math.abs(society.harmony);
-      else
-        hunger = society.population;
+      var hunger = society.population - society.harmony;
 
       if (hunger > society.yield) {
         hunger += -Math.max(society.yield, 0);
         society.yield = 0;
         world.yield += -hunger;
         // societies die
-        if (world.yield <= 0)
+        if (world.yield <= 0) {
           society.dead = true;
+          society.name = self._players[i].name;
+        }
       } else {
         society.yield += -hunger;
       }
     });
+
+    // TODO the world heals
 
     // the dead rot, and yield life
     world.societies.filter(function (society, i) {
@@ -141,16 +155,24 @@ var JaledRuleset = civ.ruleset.extend({
       var k;
       // create splinters
       if (num_splinters) for (var j = 0; j < num_splinters; j++) {
-        var parents = shuffle(clone(self._players)).slice(-3);
+        var parents = shuffle(self._players.filter(function (player) {
+          return (player.name !== 'repl');
+        })).slice(-3);
         var new_splinter = splinter(parents);
         // add each splinter to the players and societies lists
         self._players.push(new_splinter);
-        world.societies.push(make.society(new_splinter, self.current_turn));
-        world.feels.push(make.feels(1, self._players.length));
+        world.societies.push(make.society(new_splinter));
+        world.feels = world.feels.map(function (feels, k) {
+          feels.push(0);
+          return feels;
+        });
+        world.feels[world.feels.length] = make.feels(1, self._players.length)[0];
       }
     });
 
-    done();
+    this.history.push(clone(world));
+
+    done(null, world);
   },
 });
 
