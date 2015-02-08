@@ -106,7 +106,6 @@ module.exports = {
     world.yield -= population;
     world.societies[i].harmony += -population;
     world.societies[i].yield += (population * 3);
-    world.feels = inc_feel(world, i, -1);
     done(null, world);
   },
   conquer: function (i, world, done) {
