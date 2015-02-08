@@ -8,10 +8,10 @@ seas.
 During planetfall, their ship plunged into open ocean, forcing the
 ajvic pilgrims to negotiate with Jaled's aquatic leviathans in order
 to survive. Myth says their ship plunged into the heart of a Droogas,
-a massive sea-dragon,  whose death imparted echo of its soul to every
+a massive sea-dragon, whose death imparted the echo of its soul to every
 colonist aboard.
 
-The Droogakim are known as coastal merchants and warriors, bringing
+The Droogakim encounter others as merchants and warriors, bringing
 the bounty of the ocean to trade, and dragging their enemies into the
 waters.
 

@@ -1,6 +1,62 @@
 var civ = require('../../civ');
 var readline = require('readline');
 
+function indent (n) {
+  var args = Array.prototype.slice.call(arguments);
+  args[0] = new Array(n).join(' ');
+  console.log.apply(console, args);
+}
+
+var report = {
+  // report a given world state
+  // for a specific player
+  turn: function (turn, world, i, n) {
+    indent(n, 'TURN', turn);
+    report.world(world, i, n * 2);
+    report.player(world, i, n * 2);
+  },
+  world: function (world, i, n) {
+    indent(n, 'WORLD');
+    Object.keys(world)
+    .filter(function (key) {
+      return ['societies', 'feels'].indexOf(key) === -1;
+    })
+    .forEach(function (key) {
+      indent(n * 2, key, world[key]);
+    });
+
+    world.societies.map(function (society, j) {
+      if (i === j)
+        indent(n, 'SOCIETY', j, 'YOU')
+      else
+        indent(n, 'SOCIETY', j);
+      report.society(society, n * 2);
+    });
+
+    indent(n, 'FEELS');
+    report.feels(world.feels, n * 2);
+  },
+  player: function (world, i, n) {
+    indent(n, 'YOU', 'society', i);
+    indent(n + 2, 'feels', world.feels[i])
+    indent(n + 2, 'sleef', world.feels.map(function (feels, j) {
+      return feels[i];
+    }));
+    report.society(world.societies[i], n * 2);
+  },
+  society: function (society, n) {
+    Object.keys(society)
+    .forEach(function (key) {
+      indent(n, key, society[key]);
+    });
+  },
+  feels: function (feels, n) {
+    feels.forEach(function (feel, i) {
+      indent(n, i, feel);
+    });
+  }
+};
+
 module.exports = civ.player.extend({
   name: 'repl',
   init: function () {
@@ -26,42 +82,18 @@ module.exports = civ.player.extend({
           done(null, choice); 
         }
         else
-          ask(rl, choices, done);
+          rl.prompt();
       });
     };
   },
   turn: function (n, world, choices, done) {
-    var society = world.societies[n];
-    if (society.dead)
-      return done(null, world);
-
-    this._turn++;
+    // if dead, skip to the end
+    if (world.societies[n].dead) return done();
+    // report this turn
+    report.turn(this._turn++, world, n, 1);
+    // prompt user for input
+    indent(0, 'CHOOSE', choices.join(', '));
     var rl = this.make_rl(choices);
-    var indent = '  ',
-        kndent = '    ';
-    console.log('TURN', this._turn);
-    console.log(indent, 'yield', world.yield);
-    console.log(indent, 'feels');
-    world.feels.forEach(function (feels, i) {
-      console.log(kndent, i, JSON.stringify(feels));
-    });
-    world.societies.forEach(function (society, i) {
-      if (i === n)
-        console.log(indent, 'society', i, 'YOU');
-      else
-        console.log(indent, 'society', i, society.dead || '');
-      console.log(kndent, 'yield', society.yield);
-      console.log(kndent, 'population', society.population);
-      console.log(kndent, 'harmony', society.harmony);
-      console.log(kndent, 'age', society.age);
-    });
-    console.log('YOU', 'society', n);
-    console.log(indent, 'feels', world.feels[n]);
-    console.log(indent, 'yield', society.yield);
-    console.log(indent, 'population', society.population);
-    console.log(indent, 'harmony', society.harmony);
-    console.log(indent, 'age', society.age);
-    console.log('CHOOSE', choices.join(' or '));
     this.ask(rl, choices, done);
   }
 });
