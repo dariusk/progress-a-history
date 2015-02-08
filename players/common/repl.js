@@ -55,6 +55,12 @@ module.exports = civ.player.extend({
       console.log(kndent, 'harmony', society.harmony);
       console.log(kndent, 'age', society.age);
     });
+    console.log('YOU', 'society', n);
+    console.log(indent, 'feels', world.feels[n]);
+    console.log(indent, 'yield', society.yield);
+    console.log(indent, 'population', society.population);
+    console.log(indent, 'harmony', society.harmony);
+    console.log(indent, 'age', society.age);
     console.log('CHOOSE', choices.join(' or '));
     this.ask(rl, choices, done);
   }
