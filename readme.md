@@ -44,6 +44,10 @@ Then, in a JavaScript file, use the library:
 
 ## Test
 
+[![Build Status](https://travis-ci.org/garbados/progress-a-history.svg?branch=master)](https://travis-ci.org/garbados/progress-a-history)
+
+To run the tests yourself, run this in terminal:
+
 	git clone git@github.com:garbados/progress-a-history.git
 	cd progress-a-history
 	npm install
