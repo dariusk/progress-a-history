@@ -1,3 +1,4 @@
+var Reporter = require('./report');
 var async = require('async');
 var q = require('q');
 
@@ -77,28 +78,24 @@ Civ.prototype.play = function (opts) {
 
   this._playing = deferred.promise;
 
+  this._playing.fail(console.log);
+
   return this;
 };
 
 Civ.prototype.report = function (opts) {
   var self = this;
-  this._playing.then(function (reports, i) {
-    console.log('last turn');
-    var last_turn = reports.slice(-1)[0];
-    var societies = last_turn.societies;
-    var players = self._ruleset._players;
-    var named_societies = societies.map(function (society, j) {
-      var player = players[j];
-      return {
-        name: player.name,
-        society: society
-      };
-    })
-    named_societies.sort(function (a, b) {
-      return a.society.yield - b.society.yield;
-    });
-    console.log('yield', last_turn.yield);
-    console.log(named_societies);
+  this._playing
+  .then(function (history) {
+    var players = self._players;
+    var report = new Reporter(players, history);
+    if (opts && opts.json)
+      return report.json();
+    else
+      return report.console();
+  })
+  .fail(function (err) {
+    console.trace(err.message)
   });
 
   return this;

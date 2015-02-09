@@ -5,7 +5,7 @@ var ajve = require('../players/jaled');
 var civ = require('../civ');
 var async = require('async');
 
-require('longjohn');
+// require('longjohn');
 
 var ai = Object.keys(choices).map(function (choice) {
   return civ.player.extend({
@@ -23,6 +23,6 @@ civ
 .rules(jaled)
 .players(ajve)
 .players(ai)
-.players(repl)
+// .players(repl)
 .play()
 .report();
