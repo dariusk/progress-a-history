@@ -13,7 +13,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run jshint",
     "jshint": "jshint rulesets societies bin",
     "start": "node bin/index.js"
   },
