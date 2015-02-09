@@ -14,8 +14,8 @@
     "jshint": "^2.6.0"
   },
   "bin": {
-    "progress": "./bin/index.js",
-    "progress-demo": "./bin/index/js -b -i -t 20"
+    "progress": "node ./bin/index.js",
+    "progress-demo": "node ./bin/index.js -b -i -t 20"
   },
   "scripts": {
     "test": "npm run jshint",
