@@ -185,7 +185,7 @@ var JaledRuleset = civ.ruleset.extend({
     // the dead rot, and yield life
     world.societies.filter(function (society, i) {
       // only the recently dead, that is
-      return society.dead && society.age === self.history.length;
+      return society.dead && society.age === self.history.length - 1;
     })
     // for each dead society, add splinter societies
     .forEach(function () {
