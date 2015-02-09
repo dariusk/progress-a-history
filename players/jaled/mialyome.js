@@ -33,7 +33,7 @@ module.exports = civ.player.extend({
     var society = world.societies[i];
 
     // adapt?
-    if (society.population > society.harmony * 5)
+    if (society.population > society.harmony)
       return done(null, 'adapt');
 
     // expand?

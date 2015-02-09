@@ -34,16 +34,19 @@ module.exports = civ.player.extend({
   turn: function (i, world, choices, done) {
     var society = world.societies[i];
 
-    // expand?
-    if (society.yield > society.population * 3)
-      return done(null, 'expand');
-
     // develop?
     if (society.harmony > -society.population) {
       return done(null, 'develop');
     }
-    
+
     // conquer?
-    return done(null, 'conquer');
+    var enemies = world.feels.filter(function (feels, j) {
+      return feels[i] < 0;
+    });
+    if (enemies) 
+      return done(null, 'conquer');
+    
+    // consent?
+    return done(null, 'consent');
   }
 });

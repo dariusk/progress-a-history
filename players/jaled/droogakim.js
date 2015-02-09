@@ -31,10 +31,10 @@ module.exports = civ.player.extend({
   turn: function (i, world, choices, done) {
     var society = world.societies[i];
     
-    if (society.harmony < 3)
+    if (society.population > society.harmony)
       return done(null, 'adapt');
 
-    if (society.yield > society.population)
+    if (society.yield > society.population * 2)
       return done(null, 'expand');
 
     var should_raid;
