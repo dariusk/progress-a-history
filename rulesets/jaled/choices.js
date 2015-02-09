@@ -70,11 +70,16 @@ function war (world, i, j) {
   var population = world.societies[i].population;
   world.societies[i].yield += (population * 2);
   world.societies[j].yield -= population;
+  world.feels = inc_feel(world, i, -1);
+  
+  // break if the target is already dead
+  if (world.societies[j].dead)
+    return;
+
   if (world.societies[j].population < population)
     world.societies[j].population -= 1;
   if (world.societies[j].population < 1)
     world.societies[j].dead = true;
-  world.feels = inc_feel(world, i, -1);
   world.feels[j][i] += -2;
 }
 

@@ -1,28 +1,26 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var pkg = require('../package.json');
+
 var jaled = require('../rulesets/jaled');
-var choices = require('../rulesets/jaled/choices');
 var repl = require('../players/common/repl');
+var make_ai = require('../players/common/make');
 var ajve = require('../players/jaled');
 var civ = require('../civ');
-var async = require('async');
 
-// require('longjohn');
+var ai = make_ai(jaled);
 
-var ai = Object.keys(choices).map(function (choice) {
-  return civ.player.extend({
-    name: choice,
-    turn: function (i, world, choices, done) {
-      if (choices.indexOf(choice) !== -1)
-        done(null, choice);
-      else
-        done(null, choices[0]);
-    }
-  });
-});
+program
+.version(pkg.version)
+.description(pkg.description)
+.option('-j, --json', 'outputs raw JSON')
+.parse(process.argv);
 
 civ
 .rules(jaled)
 .players(ajve)
-.players(ai)
+.players(make_ai(jaled))
 // .players(repl)
-.play()
+.play(program)
 .report();

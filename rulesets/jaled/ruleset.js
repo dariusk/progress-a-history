@@ -189,17 +189,14 @@ var JaledRuleset = civ.ruleset.extend({
     })
     // for each dead society, add splinter societies
     .forEach(function () {
-      // pick 0-2 societies, bias toward 0
-      // NOTE: splintering has caused massive processor load.
-      // if rulesets are very processor-intensive,
-      // then even 20 or 30 turns will begin to stall.
-      var num_splinters = Math.max(Math.floor(Math.random() * 4) - 2, 0);
+      // pick 0-2 societies
+      var num_splinters = Math.floor(Math.random() * 2);
       var k;
       // create splinters
       if (num_splinters) for (var j = 0; j < num_splinters; j++) {
         var parents = shuffle(self._players.filter(function (player) {
           return (player.name !== 'repl');
-        })).slice(-3);
+        })).slice(-5);
         var new_splinter = splinter(parents);
         // add each splinter to the players and societies lists
         self._players.push(new_splinter);
