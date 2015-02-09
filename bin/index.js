@@ -14,8 +14,6 @@ program
 .option('-t, --turns <turns>', 'number of turns in the game. defaults to 50', 50)
 .parse(process.argv);
 
-
-
 var rules = progress.rulesets[program.rules] || progress.rulesets.jaled;
 var players = progress.players[program.rules] || progress.players.jaled;
 var basic = program.basic && progress.players.common.make(rules.choices);

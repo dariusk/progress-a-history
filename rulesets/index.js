@@ -1,2 +1,3 @@
 exports.jaled = require('./jaled');
-// exports.cockroack_rising = require('./cockroack_rising');
+exports.cockroack_rising = require('./cockroach_rising');
+exports.sanctuary = require('./sanctuary');

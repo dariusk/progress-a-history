@@ -17,7 +17,9 @@ module.exports = civ.player.extend({
     var society = world.societies[i];
 
     // develop?
-    if (society.harmony > -society.population) {
+    if (society.yield < society.population - society.harmony) {
+      // NOTE: eventually, low harmony overpowers develop's high yield
+      // causing the M'ne Ven to lose before turn 20, all on their own
       return done(null, 'develop');
     }
 
