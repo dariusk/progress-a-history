@@ -1,5 +1,3 @@
-var Table = require('cli-table');
-
 function indent (n) {
   var args = Array.prototype.slice.call(arguments);
   args[0] = new Array(n).join(' ');
