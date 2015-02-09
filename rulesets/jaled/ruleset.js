@@ -121,36 +121,78 @@ var JaledRuleset = civ.ruleset.extend({
     });
 
     // societies eat; some die
-    world.societies.forEach(function (society, i) {
-      var hunger = society.population - society.harmony;
-
-      if (hunger > society.yield) {
-        hunger += -Math.max(society.yield, 0);
-        society.yield = 0;
-        world.yield += -hunger;
-        // societies die
-        if (world.yield <= 0) {
-          society.dead = true;
-          society.name = self._players[i].name;
+    world.societies
+    .map(function (society, i) {
+      // cost for population, and ecological damage
+      return society.population - society.harmony;
+    })
+    .map(function (hunger, i) {
+      // eat from the local reserve
+      // or reap the fruits of the land
+      if (hunger < 0) {
+        world.societies[i].yield += Math.abs(hunger);
+        return 0;
+      } else if (hunger > world.societies[i].yield) {
+        hunger -= world.societies[i].yield;
+        world.societies[i].yield = 0;
+        return hunger;
+      } else {
+        world.societies[i].yield -= hunger;
+        return 0;
+      }
+    })
+    .map(function (hunger, i) {
+      // eat from the global reserve
+      if (hunger > 0) {
+        if (hunger > world.yield) {
+          hunger -= world.yield;
+          world.yield = 0;
+          return hunger;
+        } else {
+          world.yield -= hunger;
+          return 0;
         }
       } else {
-        society.yield += -hunger;
+        return 0;
+      }
+    })
+    .map(function (hunger, i) {
+      // populations starve, or die
+      if (hunger > 0) {
+        if (hunger > world.societies[i].population) {
+          hunger -= world.societies[i].population;
+          world.societies[i].population = 0;
+          world.societies[i].dead = true;
+          return hunger;
+        } else {
+          world.societies[i].population -= hunger;
+          return 0;
+        }
+      } else {
+        return 0;
       }
     });
 
-    // TODO the world heals
+    // the world heals, or sickens
+    var sum_harmonies = world.societies.map(function (society, i) {
+      return society.harmony;
+    }).reduce(function (a, b) {
+      return a + b;
+    });
+    var avg_harmonies = Math.floor(sum_harmonies / world.societies.length);
+    world.yield = Math.floor(world.yield * 1.1) + avg_harmonies;
 
     // the dead rot, and yield life
     world.societies.filter(function (society, i) {
-      return society.dead;
+      // only the recently dead, that is
+      return society.dead && society.age === self.history.length;
     })
     // for each dead society, add splinter societies
     .forEach(function () {
       // pick 0-2 societies, bias toward 0
-      // TODO splintering causes massive processor load
-      // solution a: make societies hardier
-      // solution b: splinter less
-      // 2/6/15: reduced game length to 20 to mitigate load problem
+      // NOTE: splintering has caused massive processor load.
+      // if rulesets are very processor-intensive,
+      // then even 20 or 30 turns will begin to stall.
       var num_splinters = Math.max(Math.floor(Math.random() * 4) - 2, 0);
       var k;
       // create splinters

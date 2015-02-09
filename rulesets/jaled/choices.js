@@ -59,87 +59,75 @@ function max_yield (world) {
 }
 
 // indexes of players taking 'develop' actions
-function get_developers (world) {
-  var developers = world.societies.map(function (society, i) {
-    if (society.harmony < 0)
-      return i;
-    else
-      return null;
-  }).filter(function (index, i) {
-    return index !== null;
+function min_harmony (world) {
+  var harmonies = world.societies.map(function (society, i) {
+    return society.harmony;
   });
-
-  developers.sort(function (a, b) {
-    return world.societies[a].harmony - world.societies[b].harmony;
-  });
-
-  return developers;
+  return harmonies.indexOf(Math.min.apply(Math, harmonies));
 }
 
-module.exports = {
+function war (world, i, j) {
+  var population = world.societies[i].population;
+  world.societies[i].yield += (population * 2);
+  world.societies[j].yield -= population;
+  if (world.societies[j].population < population)
+    world.societies[j].population -= 1;
+  if (world.societies[j].population < 1)
+    world.societies[j].dead = true;
+  world.feels = inc_feel(world, i, -1);
+  world.feels[j][i] += -2;
+}
+
+var choices = {
+  // research new means of survival
   discover: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
-    world.societies[i].yield += (population * 2);
+    world.societies[i].yield += world.societies[i].population * 2;
     done(null, world);
   },
+  // grow in population
   expand: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
-    var yield = society.yield;
-    world.societies[i].population += Math.floor((yield - population) / 2);
+    world.societies[i].population++;
     done(null, world);
   },
+  // raise your yield and a friend's
   exchange: function (i, world, done) {
-    var society = world.societies[i];
     var j = max_feel(world, i);
-    var bonus = society.population + world.societies[j].population;
+    var bonus = world.societies[i].population +
+                world.societies[j].population;
     world.societies[i].yield += bonus;
     world.societies[j].yield += Math.floor(bonus / 2);
     world.feels[j][i] += 2;
     done(null, world);
   },
+  // greatly raise yield
+  // but lower harmony
   develop: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
-    var yield = society.population;
-    world.yield -= population;
-    world.societies[i].harmony += -population;
-    world.societies[i].yield += (population * 3);
+    world.societies[i].harmony--;
+    world.societies[i].yield += (world.societies[i].population * 3);
     done(null, world);
   },
+  // crush the most hated people
   conquer: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
     var j = min_feel(world, i);
-    world.societies[i].yield += (population * 2);
-    world.societies[j].yield += -population;
-    world.feels = inc_feel(world, i, -1);
-    world.feels[j][i] += -2;
+    war(world, i, j);
     done(null, world);
   },
+  // steal from the wealthiest people
   raid: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
     var j = max_yield(world);
-    world.societies[i].yield += (population * 2);
-    world.societies[j].yield += -population;
-    world.feels = inc_feel(world, i, -1);
-    world.feels[j][i] += -2;
+    war(world, i, j);
     done(null, world);
   },
+  // compromise the infrastructure
+  // of the most developed people
   sabotage: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
-    var j = get_developers(world)[0];
-    if (j) {
-      world.societies[i].yield += (population * 2);
-      world.societies[j].yield += -population;
-      world.feels = inc_feel(world, i, -1);
-      world.feels[j][i] += -2; 
-    }
+    var j = min_harmony(world);
+    war(world, i, j);
     done(null, world);
   },
+  // affirm relations with all ajve
+  // reaping the benefits of universal cooperation
+  // or paying the price of reparations
   consent: function (i, world, done) {
     world.feels = inc_feel(world, i, 1);
     world.societies[i].yield += Math.floor(sum_feels(world, i) / world.feels.length);
@@ -147,14 +135,13 @@ module.exports = {
   },
   // adapt your people to the planet
   // rather than the other way around.
-  // reducing food consumption,
-  // and increasing global yield
+  // increases harmony, 
+  // which lowers yield consumption
+  // and increases global yield
   adapt: function (i, world, done) {
-    var society = world.societies[i];
-    var population = society.population;
-    var yield = society.population;
-    world.societies[i].harmony += Math.floor(population / 2);
-    world.yield += society.yield;
+    world.societies[i].harmony++;
     done(null, world);
   }
 };
+
+module.exports = choices;
