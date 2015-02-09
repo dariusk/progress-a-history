@@ -38,10 +38,11 @@ var report = {
   },
   player: function (world, i, n) {
     indent(n, 'YOU', 'society', i);
-    indent(n + 2, 'feels', world.feels[i])
-    indent(n + 2, 'sleef', world.feels.map(function (feels, j) {
+    indent(n + 2, '#\t\t', Object.keys(world.feels).join('\t'));
+    indent(n + 2, 'feels', '\t', world.feels[i].join('\t'));
+    indent(n + 2, 'sleef', '\t', world.feels.map(function (feels, j) {
       return feels[i];
-    }));
+    }).join('\t'));
     report.society(world.societies[i], n * 2);
   },
   society: function (society, n) {
@@ -51,8 +52,9 @@ var report = {
     });
   },
   feels: function (feels, n) {
+    indent(n, '#\t', Object.keys(feels).join('\t'));
     feels.forEach(function (feel, i) {
-      indent(n, i, feel);
+      indent(n, i, '\t', feel.join('\t'));
     });
   }
 };
