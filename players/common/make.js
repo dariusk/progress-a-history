@@ -1,7 +1,7 @@
 var civ = require('../../civ');
 
-function make_ai (ruleset) {
-  return Object.keys(ruleset.choices).map(function (choice) {
+function make_ai (choices) {
+  return Object.keys(choices).map(function (choice) {
     return civ.player.extend({
       name: choice,
       turn: function (i, world, choices, done) {

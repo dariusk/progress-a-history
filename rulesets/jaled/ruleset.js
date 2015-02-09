@@ -43,17 +43,17 @@ var JaledRuleset = civ.ruleset.extend({
     };
   },
   // runs before the game starts
-  before_game: function (players, done) {
+  before_game: function (turns, players, done) {
     this._players = players;
     this.history = [make.world(players)];
 
     done();
   },
   // runs when the game starts
-  game: function (players, done) {
+  game: function (turns, players, done) {
     var self = this;
 
-    async.timesSeries(50, function (i, done) {
+    async.timesSeries(turns, function (i, done) {
       self.current_turn = i;
       var world = self.history[i];
       var tasks = self._players.map(function (player, j) {
@@ -84,7 +84,7 @@ var JaledRuleset = civ.ruleset.extend({
     }, done);
   },
   // runs after the game
-  after_game: function (players, done) {
+  after_game: function (turns, players, done) {
     // TODO ...?
     done();
   },
@@ -191,7 +191,6 @@ var JaledRuleset = civ.ruleset.extend({
     .forEach(function () {
       // pick 0-2 societies
       var num_splinters = Math.floor(Math.random() * 2);
-      var k;
       // create splinters
       if (num_splinters) for (var j = 0; j < num_splinters; j++) {
         var parents = shuffle(self._players.filter(function (player) {
@@ -201,10 +200,9 @@ var JaledRuleset = civ.ruleset.extend({
         // add each splinter to the players and societies lists
         self._players.push(new_splinter);
         world.societies.push(make.society(new_splinter));
-        world.feels = world.feels.map(function (feels, k) {
-          feels.push(0);
-          return feels;
-        });
+        for (var k = 0; k < world.feels.length; k++) {
+          world.feels[k].push(0);
+        }
         world.feels[world.feels.length] = make.feels(1, self._players.length)[0];
       }
     });

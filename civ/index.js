@@ -38,7 +38,7 @@ function Civ () {
 
 Civ.prototype.player = {};
 Civ.prototype.player.extend = function (opts) {
-  return new Player(opts)
+  return new Player(opts);
 };
 
 Civ.prototype.ruleset = {};
@@ -49,7 +49,7 @@ Civ.prototype.ruleset.extend = function (opts) {
 Civ.prototype.rules = function (ruleset) {
   this._ruleset = ruleset;
   return this;
-}
+};
 
 Civ.prototype.players = function (players) {
   if (players.length)
@@ -69,7 +69,7 @@ Civ.prototype.play = function (opts) {
     ruleset.before_game,
     ruleset.game,
     ruleset.after_game
-  ], players, function (err) {
+  ], opts.turns, players, function (err) {
     if (err)
       deferred.reject(err);
     else
@@ -78,7 +78,7 @@ Civ.prototype.play = function (opts) {
 
   this._playing = deferred.promise;
 
-  this._playing.fail(console.log);
+  this._playing.fail(console.trace);
 
   return this;
 };
@@ -94,9 +94,7 @@ Civ.prototype.report = function (opts) {
     else
       return report.console();
   })
-  .fail(function (err) {
-    console.trace(err.message)
-  });
+  .fail(console.trace);
 
   return this;
 };

@@ -12,12 +12,12 @@ function Reporter (players, history) {
 }
 
 Reporter.prototype.json = function () {
-  console.log({
+  console.log(JSON.stringify({
     players: this.players.map(function (player, i) {
       return player.name || ['society', i].join(' ');
     }),
     history: this.history
-  }, undefined, 2);
+  }));
 };
 
 Reporter.prototype._print = {};
@@ -36,7 +36,7 @@ Reporter.prototype._print.world = function (tab_size, players, turn, world) {
   world.societies.forEach(function (society, i) {
     indent(tab_size, '#', i + 1, '\t', society_fields.map(function (key) {
       return society[key];
-    }).join('\t'))
+    }).join('\t'));
   });
 
   indent(tab_size, 'FEELS', '(v: others->you, h: you->others)');

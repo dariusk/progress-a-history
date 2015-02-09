@@ -11,10 +11,12 @@
     "knuth-shuffle": "^1.0.1",
     "q": "^1.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jshint": "^2.6.0"
+  },
   "scripts": {
     "test": "npm run jshint",
-    "jshint": "jshint rulesets societies bin",
+    "jshint": "jshint rulesets players civ bin test",
     "start": "node bin/index.js"
   },
   "repository": {

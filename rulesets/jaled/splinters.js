@@ -29,9 +29,9 @@ module.exports = function (players) {
     turn: function (i, world, choices, done) {
       function mode (arr) {
         return arr.sort(function(a,b){
-          return arr.filter(function(v){ return v===a }).length
-               - arr.filter(function(v){ return v===b }).length;
-        }).pop();
+          return arr.filter(function(v){ return v===a; }).length -
+                 arr.filter(function(v){ return v===b; }).length;
+               }).pop();
       }
 
       var tasks = this._players.map(function (player, j) {

@@ -27,7 +27,7 @@ var report = {
 
     world.societies.map(function (society, j) {
       if (i === j)
-        indent(n, 'SOCIETY', j, 'YOU')
+        indent(n, 'SOCIETY', j, 'YOU');
       else
         indent(n, 'SOCIETY', j);
       report.society(society, n * 2);
