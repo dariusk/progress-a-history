@@ -190,7 +190,7 @@ var JaledRuleset = civ.ruleset.extend({
     // for each dead society, add splinter societies
     .forEach(function () {
       // pick 0-2 societies
-      var num_splinters = Math.floor(Math.random() * 2);
+      var num_splinters = Math.floor(Math.random() * 3);
       // create splinters
       if (num_splinters) for (var j = 0; j < num_splinters; j++) {
         var parents = shuffle(self._players.filter(function (player) {
