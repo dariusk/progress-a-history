@@ -195,7 +195,7 @@ var JaledRuleset = civ.ruleset.extend({
       if (num_splinters) for (var j = 0; j < num_splinters; j++) {
         var parents = shuffle(self._players.filter(function (player) {
           return (player.name !== 'repl');
-        })).slice(-5);
+        })).slice(-3);
         var new_splinter = splinter(parents);
         // add each splinter to the players and societies lists
         self._players.push(new_splinter);

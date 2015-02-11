@@ -2,7 +2,7 @@ function make_society (player) {
   return {
     yield: 6,
     population: 3,
-    harmony: 1,
+    harmony: -1,
     age: 0
   };
 }

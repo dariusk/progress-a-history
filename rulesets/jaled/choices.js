@@ -108,7 +108,8 @@ var choices = {
   // but lower harmony
   develop: function (i, world, done) {
     world.societies[i].harmony--;
-    world.societies[i].yield += (world.societies[i].population * 3);
+    world.yield += -world.societies[i].population;
+    world.societies[i].yield += world.societies[i].population * 5;
     done(null, world);
   },
   // crush the most hated people

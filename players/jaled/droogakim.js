@@ -23,7 +23,7 @@ module.exports = civ.player.extend({
 
     var should_raid;
     world.societies.forEach((function (other_society, j) {
-      if (i ===j) return;
+      if (i === j) return;
       if (other_society.yield > society.yield * 2)
         should_raid = true;
     }));
