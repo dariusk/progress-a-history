@@ -1,9 +1,11 @@
-function make_society (player) {
+function make_society (player, i) {
   return {
-    yield: 6,
-    population: 3,
-    harmony: -1,
-    age: 0
+    name: player.name || 'society-' + i,
+    resources: 3,
+    might: 0,
+    wealth: 0,
+    infrastructure: 0,
+    adaptations: 0
   };
 }
 
@@ -21,9 +23,9 @@ function make_feels (n, m) {
 
 function make_world (players) {
   var world = {
-    yield: 20,
+    biodiversity: 3,
     feels: make_feels(players.length),
-    societies: players.map(function (player) { return make_society(player); })
+    societies: players.map(make_society)
   };
 
   return world;
