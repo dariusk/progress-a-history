@@ -7,7 +7,7 @@ var pkg = require('../package.json');
 program
 .version(pkg.version)
 .description(pkg.description)
-.option('-j, --json', 'outputs raw JSON')
+.option('-j, --json', 'outputs game history and results in JSON')
 .option('-r, --rules <rules>', 'specifies the ruleset. defaults to jaled', 'jaled')
 .option('-b, --basic', 'adds AI to brute-force different choices')
 .option('-a, --autonomous', 'removes the AI the player controls directly')
