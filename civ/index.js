@@ -2,7 +2,7 @@ var Reporter = require('./report');
 var async = require('async');
 var q = require('q');
 
-// PLAYER OBJECT
+// RULESET OBJECT
 
 function RuleSet (opts) {
   var self = this;
@@ -16,7 +16,7 @@ function RuleSet (opts) {
   if (this.init) this.init();
 }
 
-// RULESET OBJECT
+// PLAYER OBJECT
 
 function Player (opts) {
   var self = this;
