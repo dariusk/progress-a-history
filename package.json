@@ -22,7 +22,7 @@
     "test": "npm run jshint && npm run jscov && npm run mocha",
     "mocha": "mocha -R spec --recursive",
     "jscov": "jscoverage lib cov-lib --exclude *.md",
-    "report": "mkdir cov-report; mocha -R html-cov --recursive > cov-report/index.html",
+    "report": "mkdir cov-report; NODE_COVERAGE=true mocha -R html-cov --recursive > cov-report/index.html",
     "jshint": "jshint lib bin test",
     "start": "node bin/index.js"
   },

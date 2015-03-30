@@ -2,10 +2,11 @@
 // 1. it does what it says
 // 2. it modifies the given world object
 
-if (process.env.NODE_COVERAGE && process.env.NODE_COVERAGE === true)
+if (process.env.NODE_COVERAGE) {
   var choices = require('../../../cov-lib/rulesets/jaled/choices');
-else
+} else {
   var choices = require('../../../lib/rulesets/jaled/choices');
+}
 
 var clone = require('clone');
 var assert = require('assert');
