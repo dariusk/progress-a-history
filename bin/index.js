@@ -15,13 +15,12 @@ program
 .parse(process.argv);
 
 var rules = progress.rulesets[program.rules] || progress.rulesets.jaled;
-var players = progress.players[program.rules] || progress.players.jaled;
+// var players = progress.players[program.rules] || progress.players.jaled;
 var basic = program.basic && progress.players.common.make(rules.choices);
 var human = !program.autonomous && progress.players.common.repl;
 
 progress.civ
-.rules(rules)
-.players(players);
+.rules(rules);
 
 if (basic) progress.civ.players(basic);
 if (human) progress.civ.players(human);
@@ -30,6 +29,7 @@ progress.civ
 .play({
   turns: program.turns
 })
-.report({
-  json: program.json
+._playing
+.then(function (history) {
+  console.log(JSON.stringify(history, undefined, 2));
 });

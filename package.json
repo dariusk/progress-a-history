@@ -11,14 +11,19 @@
     "q": "^1.1.2"
   },
   "devDependencies": {
-    "jshint": "^2.6.0"
+    "jscoverage": "^0.5.9",
+    "jshint": "^2.6.0",
+    "mocha": "^2.2.1"
   },
   "bin": {
     "progress": "./bin/index.js"
   },
   "scripts": {
-    "test": "npm run jshint",
-    "jshint": "jshint rulesets players civ bin test",
+    "test": "npm run jshint && npm run jscov && npm run mocha",
+    "mocha": "mocha -R spec --recursive",
+    "jscov": "jscoverage lib cov-lib --exclude *.md",
+    "report": "mkdir cov-report; NODE_COVERAGE=true mocha -R html-cov --recursive > cov-report/index.html",
+    "jshint": "jshint lib bin test",
     "start": "node bin/index.js"
   },
   "repository": {
