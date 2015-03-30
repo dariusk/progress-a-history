@@ -31,6 +31,12 @@ var initial_world = {
 };
 
 describe('jaled', function () {
+  describe.skip('utils', function () {
+    // TODO
+  });
+  describe.skip('exodus', function () {
+    // TODO
+  });  
   describe('choices', function () {
     describe('conquer', function () {
       beforeEach(function () {
@@ -120,5 +126,8 @@ describe('jaled', function () {
         assert(this.world.societies[i].resources > initial_resources);
       });
     });
+  });
+  describe.skip('ruleset', function () {
+    // TODO
   });
 });
