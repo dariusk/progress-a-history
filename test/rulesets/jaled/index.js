@@ -4,8 +4,14 @@
 
 if (process.env.NODE_COVERAGE) {
   var choices = require('../../../cov-lib/rulesets/jaled/choices');
+  var utils = require('../../../cov-lib/rulesets/jaled/utils');
+  var exodus = require('../../../cov-lib/rulesets/jaled/exodus');
+  var ruleset = require('../../../cov-lib/rulesets/jaled/ruleset');
 } else {
   var choices = require('../../../lib/rulesets/jaled/choices');
+  var utils = require('../../../lib/rulesets/jaled/utils');
+  var exodus = require('../../../lib/rulesets/jaled/exodus');
+  var ruleset = require('../../../lib/rulesets/jaled/ruleset');
 }
 
 var clone = require('clone');
@@ -31,11 +37,28 @@ var initial_world = {
 };
 
 describe('jaled', function () {
-  describe.skip('utils', function () {
-    // TODO
+  describe('utils', function () {
+    it('should make worlds for arbitrary numbers of players', function () {
+      var players = [{}, {}, {}, {}];
+      var world = utils.make.world(players);
+      assert(world.societies.length === players.length);
+    });
   });
-  describe.skip('exodus', function () {
-    // TODO
+  describe('exodus', function () {
+    it('should splinter a new bot', function () {
+      var players = [{
+        name: 'rip van winkle'
+      }, {
+        name: 'o mi yage'
+      }, {
+        name: 'dan chris jeff'
+      }];
+      var world = utils.make.world(players);
+      world.societies[0].dead = true;
+      exodus(players, world);
+      assert(players.length === 4);
+      assert(players[3].name);
+    });
   });  
   describe('choices', function () {
     describe('conquer', function () {
@@ -127,7 +150,31 @@ describe('jaled', function () {
       });
     });
   });
-  describe.skip('ruleset', function () {
-    // TODO
+  describe('ruleset', function () {
+    it('should play a game', function (done) {
+      var players = [{
+        name: "ag var ip",
+        turn: function (i, world, choices, done) {
+          return done(null, choices[0]);
+        }
+      }, {
+        name: "gar ba dos",
+        turn: function (i, world, choices, done) {
+          return done(null, choices[1]);
+        }
+      }, {
+        name: "yal et fu",
+        turn: function (i, world, choices, done) {
+          return done(null, choices[2]);
+        }
+      }];
+      ruleset.play(players, {
+        turns: 1
+      }, function (err, results) {
+        assert(!err);
+        assert(ruleset.history.length === 1);
+        return done();
+      });
+    });
   });
 });
