@@ -1,6 +1,6 @@
 {
   "name": "progress-a-history",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Guide an engineered people as they settle another world.",
   "main": "index.js",
   "dependencies": {
