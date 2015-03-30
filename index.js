@@ -1,3 +1,3 @@
-exports.civ = require('./civ');
-exports.players = require('./players');
-exports.rulesets = require('./rulesets');
+exports.civ = require('./lib/civ');
+exports.players = require('./lib/players');
+exports.rulesets = require('./lib/rulesets');
