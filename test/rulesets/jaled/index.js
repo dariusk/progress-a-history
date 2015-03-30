@@ -42,6 +42,7 @@ describe('jaled', function () {
       var players = [{}, {}, {}, {}];
       var world = utils.make.world(players);
       assert(world.societies.length === players.length);
+      assert(world.societies[0].feels[0] === 0);
     });
   });
   describe('exodus', function () {
