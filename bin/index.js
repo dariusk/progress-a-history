@@ -29,6 +29,7 @@ progress.civ
 .play({
   turns: program.turns
 })
-.report({
-  json: program.json
+._playing
+.then(function (history) {
+  console.log(JSON.stringify(history, undefined, 2));
 });
